@@ -46,6 +46,7 @@ function _init()
  music(0)
 end
 
+a=0
 p1=0
 p2=0
 
@@ -65,18 +66,19 @@ function _draw()
  end
  efu_smear()
  color(15)
- drawlogo(64+ox,64+oy,sx,sy)
- drawlogo(64+ox+1,64+oy,sx,sy)
+ drawlogo(ox,oy,sx,sy,a-0.25)
+ drawlogo(ox+0.5,oy,sx,sy,a-0.25)
+ drawlogo(ox+1,oy,sx,sy,a-0.25)
 end
 
 
-function drawlogo(x,y,sx,sy)
-
- polyline(mx,my,1,x-10*sx,y,sx,sy)
- polyline(ix,iy,1,x+6*sx,y,sx,sy)
- polyline(ix,iy,1,x+14*sx,y,sx,sy)
- polyline(dx,dy,1,x+6*sx+1,y-10*sy,sx,sy)
- polyline(dx,dy,1,x+14*sx+1,y-10*sy,sx,sy)
+function drawlogo(x,y,sx,sy,a)
+ local an={sin(a),cos(a)}
+ polyline(mx,my,1,x-10*sx,y,sx,sy,an)
+ polyline(ix,iy,1,x+6*sx,y,sx,sy,an)
+ polyline(ix,iy,1,x+14*sx,y,sx,sy,an)
+ polyline(dx,dy,1,x+6*sx+1,y-10*sy,sx,sy,an)
+ polyline(dx,dy,1,x+14*sx+1,y-10*sy,sx,sy,an)
 
 end
 
@@ -107,7 +109,12 @@ function smcpy(to_mem,fr_mem,len)
 end
 
 
-function polyline(px,py,loop,ox,oy,sx,sy)
+function polyline(px,py,loop,ox,oy,sx,sy,an)
+ local x={}
+ local y={}
+ local dx={}
+ local dy={}
+
  for i=1,#px do
   if i+1>#px then 
   	ii=1
@@ -115,7 +122,15 @@ function polyline(px,py,loop,ox,oy,sx,sy)
    ii=i+1
   end
   if loop==1 or ii>1 then 
-   line(ox+(px[ii]*sx),oy+(py[ii]*sy),ox+(px[i]*sx),oy+(py[i]*sy))
+   x[1]=(ox+px[i]*sx)
+   y[1]=(oy+py[i]*sy)
+   x[2]=(ox+px[ii]*sx)
+   y[2]=(oy+py[ii]*sy)
+   dx[1]=x[1]*an[1]-y[1]*an[2]
+   dy[1]=x[1]*an[2]+y[1]*an[1]
+   dx[2]=x[2]*an[1]-y[2]*an[2]
+   dy[2]=x[2]*an[2]+y[2]*an[1]
+   line(64+dx[1],64+dy[1],64+dx[2],64+dy[2])
   end
  end
 end
@@ -126,6 +141,7 @@ function _update60()
  sy=1+cos(dt*0.9)*0.25
  ox=cos(dt*0.4)*16
  oy=sin(dt*0.3)*16
+ a=a+(0.002+sin(dt*0.2)*0.003)
 end
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
