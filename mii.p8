@@ -108,7 +108,7 @@ function drawosc(x,y,sx,sy,a)
  for i=1,#ax do
   ii=i-1
   if ii%8==2 or ii%8==5 then
-    polyline(dx,dy,1,x+ax[ii],y+ay[ii]*0.2+4,1,1,an)
+    polyline(dx,dy,1,x+ax[ii],y+ay[ii]*0.2+4,1+rnd(0.3),1,an)
   end
  end
  
