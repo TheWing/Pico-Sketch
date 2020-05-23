@@ -19,176 +19,170 @@ widths={}
 offx={}
 rn={}
 for i=1,32 do
- add(heights,16+rnd(48))
- add(widths,4+rnd(16))
- add(offx,i*8+rnd(4)+widths[i])
+	add(heights,16+rnd(48))
+	add(widths,4+rnd(16))
+	add(offx,i*8+rnd(4)+widths[i])
 end
 for i=1,63 do
- add(rn,0)
+	add(rn,0)
 end
 
 
 function _init()
- 
- --poke4(0x5f10,0x8582.0100)
- --poke4(0x5f14,0x0706.8605)
- --poke4(0x5f18,0x088e.0987)
- --poke4(0x5f1c,0x8084.0288)
- poke(0x5f10,0x00)
- poke(0x5f11,0x81)
- poke(0x5f12,0x01)
- poke(0x5f13,0x83)
- poke(0x5f14,0x8d)
- poke(0x5f15,0x88)
- poke(0x5f16,0x08)
- poke(0x5f17,0x8e)
- poke(0x5f18,0x09)
- poke(0x5f19,0x0a)
- poke(0x5f1a,0x0f)
- poke(0x5f1b,0x07)
- poke(0x5f1c,0x0d)
- poke(0x5f1d,0x05)
- poke(0x5f1e,0x85)
- poke(0x5f1f,0x80)
- poke(0x5f2e,0)
- 
- poke4(0x5f40,0xff00.00ff)
- music(0)
+	--poke4(0x5f10,0x8582.0100)
+	--poke4(0x5f14,0x0706.8605)
+	--poke4(0x5f18,0x088e.0987)
+	--poke4(0x5f1c,0x8084.0288)
+	poke(0x5f10,0x00)
+	poke(0x5f11,0x81)
+	poke(0x5f12,0x01)
+	poke(0x5f13,0x83)
+	poke(0x5f14,0x8d)
+	poke(0x5f15,0x88)
+	poke(0x5f16,0x08)
+	poke(0x5f17,0x8e)
+	poke(0x5f18,0x09)
+	poke(0x5f19,0x0a)
+	poke(0x5f1a,0x0f)
+	poke(0x5f1b,0x07)
+	poke(0x5f1c,0x0d)
+	poke(0x5f1d,0x05)
+	poke(0x5f1e,0x85)
+	poke(0x5f1f,0x80)
+	poke(0x5f2e,0)
+	
+	poke4(0x5f40,0xff00.00ff)
+	music(0)
 end
 hory=104
 yoff=-48
 
 function _update60()
- local i
- local s
- dt=dt+0.01
- for i=1,#offx do
-  s=3*((-32+heights[i])*0.004)
-  offx[i]=offx[i]-s--3*((-32+heights[i])*0.004)
-  if s>-0.01 and s<0.01 then
-   heights[i]=16+rnd(48)
-  end
-  if offx[i]+widths[i]<-32 then
-   offx[i]=130+rnd(32)
-   heights[i]=16+rnd(48)
-  end
-  if offx[i]>164 then
-   offx[i]=-widths[i]-rnd(31)
-   heights[i]=16+rnd(48)
-  end
-   
- end
- 
- for i=1,63 do
-  rn[i]=rn[i]+(0.002-rnd(0.004))
- end
- 
- box=cos(dt*0.17)*40
- sx=sin(dt*0.17)
- boy=32+sin(dt*0.3)*16
- 
+	local i
+	local s
+	dt=dt+0.01
+	for i=1,#offx do
+		s=3*((-32+heights[i])*0.004)
+		offx[i]=offx[i]-s--3*((-32+heights[i])*0.004)
+		if s>-0.01 and s<0.01 then
+			heights[i]=16+rnd(48)
+		end
+		if offx[i]+widths[i]<-32 then
+			offx[i]=130+rnd(32)
+			heights[i]=16+rnd(48)
+		end
+		if offx[i]>164 then
+			offx[i]=-widths[i]-rnd(31)
+			heights[i]=16+rnd(48)
+		end
+	end
+	
+	for i=1,63 do
+		rn[i]=rn[i]+(0.002-rnd(0.004))
+	end
+	box=cos(dt*0.17)*40
+	sx=sin(dt*0.17)
+	boy=32+sin(dt*0.3)*16
 end
 
 function _draw()
- local i
- local ii
- memcpy(0x1000,0x6000,0x2000)
- cls(1)
- for i=2,11 do
-  for ii=i*2,i*2+3 do
-   line(0,ii*2,128,ii*2,i)
-   line(0,ii*2-1,128,ii*2-1,i-1)
-  end
- end 
- rectfill(0,22*2,128,hory+yoff,11)
- rectfill(0,hory+yoff,128,128,0)
- efu_water()
- drawcity(hory,yoff)
- color(1)
- drawboat(bx,by,box,16+boy/4+15,1*sx+((boy-16)*0.01),-0.5+((boy-16)*0.01),-0.25)
- color(0)
- drawboat(bx,by,box,16+boy/4,1*sx+((boy-16)*0.01),1+((boy-16)*0.01),-0.25)
- drawboat(bx,by,box,16+boy/4+1,1*sx+((boy-16)*0.01),1+((boy-16)*0.01),-0.25)
- drawboat(bx,by,box+1,16+boy/4,1*sx+((boy-16)*0.01),1+((boy-16)*0.01),-0.25)
- 
- --debug_palette()
+	local i
+	local ii
+	memcpy(0x1000,0x6000,0x2000)
+	cls(1)
+	for i=2,11 do
+		for ii=i*2,i*2+3 do
+			line(0,ii*2,128,ii*2,i)
+			line(0,ii*2-1,128,ii*2-1,i-1)
+		end
+	end 
+	rectfill(0,22*2,128,hory+yoff,11)
+	rectfill(0,hory+yoff,128,128,0)
+	efu_water()
+	drawcity(hory,yoff)
+	color(1)
+	drawboat(bx,by,box,16+boy/4+15,1*sx+((boy-16)*0.01),-0.5+((boy-16)*0.01),-0.25)
+	color(0)
+	drawboat(bx,by,box,16+boy/4,1*sx+((boy-16)*0.01),1+((boy-16)*0.01),-0.25)
+	drawboat(bx,by,box,16+boy/4+1,1*sx+((boy-16)*0.01),1+((boy-16)*0.01),-0.25)
+	drawboat(bx,by,box+1,16+boy/4,1*sx+((boy-16)*0.01),1+((boy-16)*0.01),-0.25)
+	
+	--debug_palette()
 end
 
 
 function drawboat(bx,by,box,boy,sx,sy,a)
- local an={sin(a),cos(a)}
--- color(0)
- polyline(bx,by,0,box,boy,sx,sy,an)
+	local an={sin(a),cos(a)}
+	-- color(0)
+	polyline(bx,by,0,box,boy,sx,sy,an)
 end
 
 
 function drawcity(hory,yoff)
- local i
- local x
- local y
- local w
- local h
- color(0)
- for i=1,#heights do
-  x=offx[i]
-  h=heights[i]
-  y=hory-h\(128/hory)+yoff
-  w=widths[i]
-  rectfill(x,y,x+w,y+h)
- 
- end
-
+	local i
+	local x
+	local y
+	local w
+	local h
+	color(0)
+	for i=1,#heights do
+		x=offx[i]
+		h=heights[i]
+		y=hory-h\(128/hory)+yoff
+		w=widths[i]
+		rectfill(x,y,x+w,y+h)
+	end
 end
 
 function efu_water()
- local i
- local ii
- local p
- for i=0,61 do
-  for ii=0,64 do
-   p=@(0x2000+ii-i*64+(8*sin(dt*0.08+i*rn[i+1]*0.3)))&0b00001111
-   if p+1>15 then p=14 end
-   if p-1<1 then p=1 end
-   poke(0x7000+ii+(i+1)*64,(p+1\1)<<4|p+1)
-  end
- end
+	local i
+	local ii
+	local p
+	for i=0,61 do
+		for ii=0,64 do
+			p=@(0x2000+ii-i*64+(8*sin(dt*0.08+i*rn[i+1]*0.3)))&0b00001111
+			if p+1>15 then p=14 end
+			if p-1<1 then p=1 end
+			poke(0x7000+ii+(i+1)*64,(p+1\1)<<4|p+1)
+		end
+	end
 end
 
 
 function debug_palette()
- rectfill(0,0,128,128,0)
- for i=0,15 do
-  print(@(0x5f10+i),0,6*i,i)
-  
-  print(i,4*4,6*i,i)
- end
+	rectfill(0,0,128,128,0)
+	for i=0,15 do
+		print(@(0x5f10+i),0,6*i,i)
+		
+		print(i,4*4,6*i,i)
+	end
 end 
 
 
 function polyline(px,py,loop,ox,oy,sx,sy,an)
- local x={}
- local y={}
- local dx={}
- local dy={}
-
- for i=1,#px do
-  if i+1>#px then 
-  	ii=1
-  else
-   ii=i+1
-  end
-  if loop==1 or ii>1 then 
-   x[1]=(ox+px[i]*sx)
-   y[1]=(oy+py[i]*sy)
-   x[2]=(ox+px[ii]*sx)
-   y[2]=(oy+py[ii]*sy)
-   dx[1]=x[1]*an[1]-y[1]*an[2]
-   dy[1]=x[1]*an[2]+y[1]*an[1]
-   dx[2]=x[2]*an[1]-y[2]*an[2]
-   dy[2]=x[2]*an[2]+y[2]*an[1]
-   line(64+dx[1],64+dy[1],64+dx[2],64+dy[2])
-  end
- end
+	local x={}
+	local y={}
+	local dx={}
+	local dy={}
+	
+	for i=1,#px do
+		if i+1>#px then 
+			ii=1
+		else
+			ii=i+1
+		end
+		if loop==1 or ii>1 then 
+			x[1]=(ox+px[i]*sx)
+			y[1]=(oy+py[i]*sy)
+			x[2]=(ox+px[ii]*sx)
+			y[2]=(oy+py[ii]*sy)
+			dx[1]=x[1]*an[1]-y[1]*an[2]
+			dy[1]=x[1]*an[2]+y[1]*an[1]
+			dx[2]=x[2]*an[1]-y[2]*an[2]
+			dy[2]=x[2]*an[2]+y[2]*an[1]
+			line(64+dx[1],64+dy[1],64+dx[2],64+dy[2])
+		end
+	end
 end
 
 __gfx__

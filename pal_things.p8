@@ -5,69 +5,68 @@ f=0
 
 
 function _init()
- poke(0x5f00,0b0000)
+	poke(0x5f00,0b0000)
 end
 
 function _update60()
- f=f+1
- f=f%4
- palette(f+1,0x0c,0x81)
- 
+	f=f+1
+	f=f%4
+	palette(f+1,0x0c,0x81)
 end
 
 function _draw()
- if f==0 then
-  memcpy(0x0000,0x6000,0x2000)
-	 local x
-	 local y
-	 for x=1,129 do
-	  for y=1,129 do
-	   c=(8*x)/32
-	   pset(x-1,y-1,c)
-	  end
-	 end
- end
+	if f==0 then
+		memcpy(0x0000,0x6000,0x2000)
+		local x
+		local y
+		for x=1,129 do
+			for y=1,129 do
+				c=(8*x)/32
+				pset(x-1,y-1,c)
+			end
+		end
+	end
 end
 
 function palette(n,c1,c2)
 	local c=0
- poke(0x5f10,c2)
- poke(0x5f11,c2)
- poke(0x5f12,c2)
- poke(0x5f13,c2)
- poke(0x5f14,c2)
- poke(0x5f15,c2)
- poke(0x5f16,c2)
- poke(0x5f17,c2)
- poke(0x5f18,c2)
- poke(0x5f19,c2)
- poke(0x5f1a,c2)
- poke(0x5f1b,c2)
- poke(0x5f1c,c2)
- poke(0x5f1d,c2)
- poke(0x5f1e,c2)
- poke(0x5f1f,c2)
- if n==1 then
-  poke(0x5f10,c1)
-  poke(0x5f14,c1)
-  poke(0x5f18,c1)
-  poke(0x5f1c,c1)
- elseif n==2 then
-  poke(0x5f11,c1)
-  poke(0x5f15,c1)
-  poke(0x5f19,c1)
-  poke(0x5f1d,c1)
- elseif n==3 then
-  poke(0x5f12,c1)
-  poke(0x5f16,c1)
-  poke(0x5f1a,c1)
-  poke(0x5f1e,c1)
- elseif n==4 then
-  poke(0x5f13,c1)
-  poke(0x5f17,c1)
-  poke(0x5f1b,c1)
-  poke(0x5f1f,c1)
- end
+	poke(0x5f10,c2)
+	poke(0x5f11,c2)
+	poke(0x5f12,c2)
+	poke(0x5f13,c2)
+	poke(0x5f14,c2)
+	poke(0x5f15,c2)
+	poke(0x5f16,c2)
+	poke(0x5f17,c2)
+	poke(0x5f18,c2)
+	poke(0x5f19,c2)
+	poke(0x5f1a,c2)
+	poke(0x5f1b,c2)
+	poke(0x5f1c,c2)
+	poke(0x5f1d,c2)
+	poke(0x5f1e,c2)
+	poke(0x5f1f,c2)
+	if n==1 then
+		poke(0x5f10,c1)
+		poke(0x5f14,c1)
+		poke(0x5f18,c1)
+		poke(0x5f1c,c1)
+	elseif n==2 then
+		poke(0x5f11,c1)
+		poke(0x5f15,c1)
+		poke(0x5f19,c1)
+		poke(0x5f1d,c1)
+	elseif n==3 then
+		poke(0x5f12,c1)
+		poke(0x5f16,c1)
+		poke(0x5f1a,c1)
+		poke(0x5f1e,c1)
+	elseif n==4 then
+		poke(0x5f13,c1)
+		poke(0x5f17,c1)
+		poke(0x5f1b,c1)
+		poke(0x5f1f,c1)
+	end
 end
 __gfx__
 00000000012301230000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000

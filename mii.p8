@@ -22,12 +22,12 @@ ix={-2,-2,3,3}
 iy={ 9,-5,-5,9}
 --mii logo dots
 for i=1,8 do
- add(dx,cos(i/8.)*3.1)--dx={4,3,1,0,1,-3,-4,-3, 1, 0, 1, 3}
- add(dy,sin(i/8.)*3.1)--dy={0,1,3,4,3, 1, 0,-1,-3,-4,-3,-1}
+	add(dx,cos(i/8.)*3.1)--dx={4,3,1,0,1,-3,-4,-3, 1, 0, 1, 3}
+	add(dy,sin(i/8.)*3.1)--dy={0,1,3,4,3, 1, 0,-1,-3,-4,-3,-1}
 end
 for i=0,22 do
- add(ax,64-i*5)
- add(ay,0)
+	add(ax,64-i*5)
+	add(ay,0)
 end
 sx=0
 sy=0
@@ -37,16 +37,16 @@ dt=0
 on=0
 
 function _init()
-
- palette()
- poke(0x5f2e,0)
-
-
- poke(0x5f40,0b1111)
- poke(0x5f41,0b0000)
- poke(0x5f42,0b0000)
- poke(0x5f43,0b1111)
- music(0)
+	
+	palette()
+	poke(0x5f2e,0)
+	
+	
+	poke(0x5f40,0b1111)
+	poke(0x5f41,0b0000)
+	poke(0x5f42,0b0000)
+	poke(0x5f43,0b1111)
+	music(0)
 end
 
 a=0
@@ -57,203 +57,194 @@ flipped=0
 flips=0
 
 function _draw()
- local i
- for i=0,0x2000 do
-  p1=@(0x6000+i)&0b00001111--(@(0x6000+i)&0b11110000)>>>4
-  --p2=(@(0x6000+i)&0b00001111)
-  p1=(p1*0.9999)
-  --p1=(p2*0.8)\
-  poke(0x1000+i,p1\1<<4|p1)
- end
- -- memcpy(0x1000,0x6000,0x2000)
- cls(0) 
- for i=0,15 do
- -- rectfill(i*4,8,i*4+4,12,i)
- end
- efu_fade()
- color(15)
- drawlogo(ox,oy,sx,sy,a-0.25)
- drawlogo(ox+0.5,oy,sx,sy,a-0.25)
- drawlogo(ox-0.5,oy,sx,sy,a-0.25)
- 
- color(14)
- drawosc(-11,66,1.2,0.3,-0.25)
- drawosc(-10,66,1.2,0.3,-0.25)
- 
-
+	local i
+	for i=0,0x2000 do
+		p1=@(0x6000+i)&0b00001111--(@(0x6000+i)&0b11110000)>>>4
+		--p2=(@(0x6000+i)&0b00001111)
+		p1=(p1*0.9999)
+		--p1=(p2*0.8)\
+		poke(0x1000+i,p1\1<<4|p1)
+	end
+	-- memcpy(0x1000,0x6000,0x2000)
+	cls(0) 
+	for i=0,15 do
+	-- rectfill(i*4,8,i*4+4,12,i)
+	end
+	efu_fade()
+	color(15)
+	drawlogo(ox,oy,sx,sy,a-0.25)
+	drawlogo(ox+0.5,oy,sx,sy,a-0.25)
+	drawlogo(ox-0.5,oy,sx,sy,a-0.25)
+	
+	color(14)
+	drawosc(-11,66,1.2,0.3,-0.25)
+	drawosc(-10,66,1.2,0.3,-0.25)
+	
+	
 end
 
 
 function drawlogo(x,y,sx,sy,a)
- local an={sin(a),cos(a)}
- local f1=(flips&0b100)>>>2
- local f2=(flips&0b010)>>>1
- local f3=(flips&0b001)
- polyline(mx,my,1,x-10*sx,y,sx,sy*(1-2*f1),an)
- polyline(ix,iy,1,x+6*sx,y,sx,sy*(1-2*f2),an)
- polyline(ix,iy,1,x+14*sx,y,sx,sy*(1-2*f3),an)
- polyline(dx,dy,1,x+6*sx+1,y-(10*sy)*(1-2*f2),sx,sy,an)
- polyline(dx,dy,1,x+14*sx+1,y-(10*sy)*(1-2*f3),sx,sy,an)
-
+	local an={sin(a),cos(a)}
+	local f1=(flips&0b100)>>>2
+	local f2=(flips&0b010)>>>1
+	local f3=(flips&0b001)
+	polyline(mx,my,1,x-10*sx,y,sx,sy*(1-2*f1),an)
+	polyline(ix,iy,1,x+6*sx,y,sx,sy*(1-2*f2),an)
+	polyline(ix,iy,1,x+14*sx,y,sx,sy*(1-2*f3),an)
+	polyline(dx,dy,1,x+6*sx+1,y-(10*sy)*(1-2*f2),sx,sy,an)
+	polyline(dx,dy,1,x+14*sx+1,y-(10*sy)*(1-2*f3),sx,sy,an)
+	
 end
 
 function drawosc(x,y,sx,sy,a)
- local an={sin(a),cos(a)}
- local i
- local ii
- sy=sy+rnd(0.02)
- color(14)
- polyline(ax,ay,0,x,y,sx,sy,an)
- color(15)
- for i=1,#ax do
-  ii=i-1
-  if ii%8==2 or ii%8==5 then
-    polyline(dx,dy,1,x+ax[ii],y+ay[ii]*0.2+4,1+rnd(0.3),1,an)
-  end
- end
- 
+	local an={sin(a),cos(a)}
+	local i
+	local ii
+	sy=sy+rnd(0.02)
+	color(14)
+	polyline(ax,ay,0,x,y,sx,sy,an)
+	color(15)
+	for i=1,#ax do
+		ii=i-1
+		if ii%8==2 or ii%8==5 then
+			polyline(dx,dy,1,x+ax[ii],y+ay[ii]*0.2+4,1+rnd(0.3),1,an)
+		end
+	end
 end
 
 
 function efu_smear()
- local i
- for i=1,127 do
-  smcpy(0x6000+i*63+(2-rnd(3)),0x1000+i*63,128)
- end
+	local i
+	for i=1,127 do
+		smcpy(0x6000+i*63+(2-rnd(3)),0x1000+i*63,128)
+	end
 end
 
 function efu_fade()
- local i
- for i=1,127 do
-  memcpy(0x6000+i*63,0x1000+i*63,128)  
- end
+	local i
+	for i=1,127 do
+		memcpy(0x6000+i*63,0x1000+i*63,128)  
+	end
 end
 
 --memcopy that doesn't overflow
 function smcpy(to_mem,fr_mem,len)
- if to_mem<0x6000 then to_mem=0x6000 end
- if to_mem>0x7ffe then
-  to_mem=0x7ffe
-  len=1
- end
- if to_mem+len>0x7fff then len=0x7fff-to_mem end
- --if fr_mem<0x6000 then fr_mem=0x6000 end
- if fr_mem>0x7ffe then
-  fr_mem=0x7ffe
-  len=1
- end
- if fr_mem+len>0x7fff then len=0x7fff-fr_mem end
-
- memcpy(to_mem,fr_mem,len)
-
+	if to_mem<0x6000 then to_mem=0x6000 end
+	if to_mem>0x7ffe then
+		to_mem=0x7ffe
+		len=1
+	end
+	if to_mem+len>0x7fff then len=0x7fff-to_mem end
+	if fr_mem>0x7ffe then
+		fr_mem=0x7ffe
+		len=1
+	end
+	if fr_mem+len>0x7fff then len=0x7fff-fr_mem end
+	memcpy(to_mem,fr_mem,len)
 end
 
 
 function polyline(px,py,loop,ox,oy,sx,sy,an)
- local x={}
- local y={}
- local dx={}
- local dy={}
-
- for i=1,#px do
-  if i+1>#px then 
-  	ii=1
-  else
-   ii=i+1
-  end
-  if loop==1 or ii>1 then 
-   x[1]=(ox+px[i]*sx)
-   y[1]=(oy+py[i]*sy)
-   x[2]=(ox+px[ii]*sx)
-   y[2]=(oy+py[ii]*sy)
-   dx[1]=x[1]*an[1]-y[1]*an[2]
-   dy[1]=x[1]*an[2]+y[1]*an[1]
-   dx[2]=x[2]*an[1]-y[2]*an[2]
-   dy[2]=x[2]*an[2]+y[2]*an[1]
-   line(64+dx[1],64+dy[1],64+dx[2],64+dy[2])
-  end
- end
+	local x={}
+	local y={}
+	local dx={}
+	local dy={}
+	for i=1,#px do
+		if i+1>#px then 
+			ii=1
+		else
+			ii=i+1
+		end
+		if loop==1 or ii>1 then 
+			x[1]=(ox+px[i]*sx)
+			y[1]=(oy+py[i]*sy)
+			x[2]=(ox+px[ii]*sx)
+			y[2]=(oy+py[ii]*sy)
+			dx[1]=x[1]*an[1]-y[1]*an[2]
+			dy[1]=x[1]*an[2]+y[1]*an[1]
+			dx[2]=x[2]*an[1]-y[2]*an[2]
+			dy[2]=x[2]*an[2]+y[2]*an[1]
+			line(64+dx[1],64+dy[1],64+dx[2],64+dy[2])
+		end
+	end
 end
 
 function _update60()
- dt=dt+0.01
- sx=1+sin(dt)*0.2--+mid(1,0,sin(dt*0.01))*10
- sy=1+cos(dt*0.9)*0.25--+mid(1,0,sin(dt*0.01))*10
- ox=cos(dt*0.4)*16
- oy=sin(dt*0.3)*16
- a=a+(0.002+sin(dt*0.2)*0.003)
- 
- if get_note(3)[3]==5 then
-  flipped=1
- end
- if get_note(3)[3]==1 and flipped==1 then
-  f=flips
-  flips=flips+rnd(7)\1
-  flips=flips%8
-  if f==flips then
-   flips=flips+1
-  end
-  flipped=0
-  if rnd(100)>95 then
-   dt=dt+0.5 
-  end
-   palette(rnd(2)\1)
- end
- 
- updateosc()
- 
+	dt=dt+0.01
+	sx=1+sin(dt)*0.2--+mid(1,0,sin(dt*0.01))*10
+	sy=1+cos(dt*0.9)*0.25--+mid(1,0,sin(dt*0.01))*10
+	ox=cos(dt*0.4)*16
+	oy=sin(dt*0.3)*16
+	a=a+(0.002+sin(dt*0.2)*0.003)
+	
+	if get_note(3)[3]==5 then
+		flipped=1
+	end
+	if get_note(3)[3]==1 and flipped==1 then
+		f=flips
+		flips=flips+rnd(7)\1
+		flips=flips%8
+		if f==flips then
+			flips=flips+1
+		end
+		flipped=0
+		if rnd(100)>95 then
+			dt=dt+0.5 
+		end
+		palette(rnd(2)\1)
+	end
+	
+	updateosc()
 end
 
 function palette(n)
- if on!=n then
-  cls(7)
- end
- on=n
- if n==1 then
-  poke4(0x5f10,0x0c0c.0c0c)
-  poke4(0x5f14,0x8c8c.0c0c)
-  poke4(0x5f18,0x0101.8c8c)
-  poke4(0x5f1c,0x0781.8181)
- else
-  poke4(0x5f1c,0x070c.0c0c)
-  poke4(0x5f18,0x0c0c.8c8c)
-  poke4(0x5f14,0x8c8c.0101)
-  poke4(0x5f10,0x8181.0000)
- end
+	if on!=n then
+		cls(7)
+	end
+	on=n
+	if n==1 then
+		poke4(0x5f10,0x0c0c.0c0c)
+		poke4(0x5f14,0x8c8c.0c0c)
+		poke4(0x5f18,0x0101.8c8c)
+		poke4(0x5f1c,0x0781.8181)
+	else
+		poke4(0x5f1c,0x070c.0c0c)
+		poke4(0x5f18,0x0c0c.8c8c)
+		poke4(0x5f14,0x8c8c.0101)
+		poke4(0x5f10,0x8181.0000)
+	end
 end
 
 
-
 function updateosc()
- local i
- local ii
- for i=1,#ax do
-  ay[i]=ay[i]*0.9
-  ii=i-2
-  if get_note(ii\7)[3]>0 and ii\7<3 then
-   ay[i]=-get_note(ii\7)[1]*((i%8)*(8-i%8))*0.1
-  end
-  
- end
-
+	local i
+	local ii
+	for i=1,#ax do
+		ay[i]=ay[i]*0.9
+		ii=i-2
+		if get_note(ii\7)[3]>0 and ii\7<3 then
+			ay[i]=-get_note(ii\7)[1]*((i%8)*(8-i%8))*0.1
+		end
+	end
 end
 -->8
 --music stuff
 
 
 function get_note(ch)
- local sf = stat(16+ch)
- local tm = stat(20+ch)
- local addr = %(0x3200 + 68*sf + 2*tm)
- --      bitmap    sfx
- --       for         vol
- --      notes           inr
- --                         pitch
- local pitch = (0b0000000000111111&addr)
- local instr = (0b0000000111000000&addr)>>>6
- local vol   = (0b0000111000000000&addr)>>>9
- local fx    = (0b0111000000000000&addr)>>>12
- return { pitch, instr, vol, fx }
+	local sf = stat(16+ch)
+	local tm = stat(20+ch)
+	local addr = %(0x3200 + 68*sf + 2*tm)
+	--      bitmap    sfx
+	--       for         vol
+	--      notes           inr
+	--                         pitch
+	local pitch = (0b0000000000111111&addr)
+	local instr = (0b0000000111000000&addr)>>>6
+	local vol   = (0b0000111000000000&addr)>>>9
+	local fx    = (0b0111000000000000&addr)>>>12
+	return { pitch, instr, vol, fx }
 end
 
 __gfx__
