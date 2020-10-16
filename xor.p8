@@ -7,28 +7,38 @@ t=0
 b=0
 c=0
 p=0
-beat=0
 p1=0
 p2=0
-hit=0
+po=0
+
 poke(0x5f40,0b1111)
-music(0)
+//music(0)
+
+function _init()
+	poke4(0x5f10,0x8301.8100)
+	poke4(0x5f14,0x8e08.888d)
+	poke4(0x5f18,0x070f.0a09)
+	poke4(0x5f1c,0x8085.050d)
+	poke(0x5f2e,0)
+	
+end
 
 function _draw()
 -- if b!=0x000 then
 	memcpy(0x1000,0x6000,0x2000)
 	
-	efu_fade()
+	efu_smear()
 	for mem=scrstart,scrend do
 		c=((mem%64)^^(mem>>>7))*0.4--(1+sin(t)*8)
 		p=@(mem)
-		p1=(p|(c&b))*0.4
-		p2=((p>>>4)|(c&b))*0.4
-		poke(mem,(((p1\1)<<4)|p2)) 
+		p1=(p>>>4)\b
+		p2=((p\12)|((c\8)*(b))\4)|(p2&b&c)
+		po=((p2&0b1111)<<4)|(p2&0b1111)
+		poke(mem,po)//(((p1\1)<<4)|p2)) 
 	end
 	if btn()==0 then 
-	 	--rectfill(0,0,52,6,0)
-  	--print("press buttons",1,1,8)
+--		rectfill(0,0,52,6,0)
+--		print("press buttons",1,1,8)
 	end
 end
 
@@ -40,18 +50,7 @@ function efu_smear()
 end
 
 function _update60()
- if (stat(20)%8<=1) then
-  b=shl(5,beat%5) --btn()
-  beat=beat+1
-  hit=1
- else 
-  hit=0
-  b=shl(1,beat%8)
- end
- beat=beat
- --rectfill(0,0,52,6,0)
- --print(b,1,1,8)
- t=t+0.001
+  b=btn()
 end
 
 

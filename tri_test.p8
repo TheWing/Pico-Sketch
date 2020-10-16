@@ -7,8 +7,18 @@ __lua__
 --1= single line (still jagged)
 --2= tripled (smoothest but slow)
 --3= line instead of memset
-quality=3
+quality=0
+tris=15
 
+a=2
+b=4
+c=9
+d=7
+
+bw={b,a,b,b,b,c,c,c,c,d,a,a,b,b,b,c}
+//    {b,b,c,c,c,b,b,b,b,b,b,f,f,f,f,f},
+//    {b,c,c,b,b,b,b,b,b,f,b,f,b,f,f,f},
+//    {b,b,b,f,b,f,b,b,b,f,f,f,b,b,f,b}}
 
 
 function _init()
@@ -17,16 +27,29 @@ function _init()
 end
 
 function _update60()
+	//quality=quality+(@0x5f4c&0x0010)-(@0x5f4c&0x0020)
 	
+	if (btnp(0)) quality -= 1
+	if (btnp(1)) quality += 1
+	if (btnp(3)) tris -= 1
+	if (btnp(2)) tris += 1
+	quality=quality%5
+	tris=tris%512
 end
 f=0
 function _draw()
 	cls()
 	--[
-	for i=1,15 do
-		trifill({rnd(128),rnd(128)},
-		        {rnd(128),rnd(128)},
-		        {rnd(128),rnd(128)},rnd(15))
+	for i=1,tris do
+		if quality<4 then 
+			trifill({rnd(128),rnd(128)},        
+			        {rnd(128),rnd(128)},        
+			        {rnd(128),rnd(128)},rnd(15))
+		else
+			tri({rnd(128),rnd(128)},        
+			    {rnd(128),rnd(128)},        
+			    {rnd(128),rnd(128)},rnd(15))
+		end
 	end
 	--]]
 	--trifill({10,10},{128,(f*0.01)%128},{30,80},1)
@@ -34,6 +57,9 @@ function _draw()
 	--trifill({30,80},{10,10},{80,20},3)
 	f=f+1
 	poke(0x6000,flr(f)*128)
+	print(quality,124,122,1)
+	print(tris,1,122,1)
+	palette(1)
 end
 
 
@@ -116,6 +142,14 @@ function trifill(p1,p2,p3,c)
 	end
 end
 
+function tri(p1,p2,p3,c)
+	color(c)
+	line(p1[1],p1[2],p2[1],p2[2])
+	line(p3[1],p3[2],p2[1],p2[2])
+	line(p1[1],p1[2],p3[1],p3[2])
+end
+
+
 function lerp(v0,v1,t)
 	return v0+t*(v1-v0)
 end
@@ -126,6 +160,12 @@ end
  
 
 
+function palette(n)
+	local i
+	for i=1,16 do
+		poke(0x5f10+(i-1),bw[i])
+	end
+end
 
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000

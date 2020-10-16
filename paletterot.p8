@@ -12,11 +12,14 @@ fr=0
 ff=0
 b=4
 f=9
+t=13
+maara=1
 
-bw={{b,b,f,f,f,f,b,f,b,b,b,f,b,b,b,b},
-    {b,b,f,f,f,b,b,b,b,b,b,f,f,f,f,f},
-    {b,f,f,b,b,b,b,b,b,f,b,f,b,f,f,f},
-    {b,b,b,f,b,f,b,b,b,f,f,f,b,b,f,b}}
+bw={{b,b,f,f,f,f,b,f,t,b,b,f,b,b,b,b},
+    {b,b,f,f,f,b,b,b,t,b,b,f,f,f,f,f},
+    {b,f,f,b,b,b,b,b,t,f,b,f,b,f,f,f},
+    {b,b,b,f,b,f,b,b,t,f,f,f,b,b,f,b}}
+
      
 function _update60()
 	f=f+1
@@ -32,7 +35,10 @@ end
 function _draw()
 	if f%4==0 then
 		cls(0)
-		if f%256>=128 then
+		if f%128==0 then
+			maara=rnd(5)\1
+		end
+		if maara==1 then
 			for x=0,3 do
 				for y=0,3 do
 					fr=ff+x+y
@@ -40,20 +46,33 @@ function _draw()
 				end
 			end
 		else
-			fr=f%32
-			x=(fr%16)*8
-			y=(fr\16)*32
-			sspr(x,y,32,32,0,0,128,128)
-			//zspr(((ff)%4)*4,4,4,0,0,4)
+			torus_grid(2^maara,f)
 		end 
-		print(stat(7),6,0,11)
+		print(stat(7),6,0,8)
 		for x=0,15 do
 		 pset(x%4+1,x\4+1,x)
 		end
 	end
 end
 
+function torus_grid(n,f)
+	local xx
+	local yy
+	local x
+	local y
+	local fr
+	for xx=0,n-1 do
+		for yy=0,n-1 do
+			fr=(f+xx*4+yy*4)%32
+			x=(fr%16)*8
+			y=(fr\16)*32
+			sspr(x,y,32,32,xx*(128\n),yy*(128\n),(128\n),(128\n),xx>=n\2,yy>=n\2)
+		end
+	end
+end
 
+// 2 -> 64
+// 
 
 function palette(n)
 	local i
@@ -63,15 +82,16 @@ function palette(n)
 end
 
 function rnd_palette()
-	local l = rnd(16) //b
-	local k = rnd(16) //f
+	local l = rnd(16)\1 //b
+	local k = rnd(16)\1 //f
+	local p = (l+k+1)%16
 	if l==k then 
 		l=(l-1)%16
 	end
-	bw={{l,l,k,k,k,k,l,k,l,l,l,k,l,l,l,l},
-	    {l,l,k,k,k,l,l,l,l,l,l,k,k,k,k,k},
-	    {l,k,k,l,l,l,l,l,l,k,l,k,l,k,k,k},
-	    {l,l,l,k,l,k,l,l,l,k,k,k,l,l,k,l}}
+	bw={{l,l,k,k,k,k,l,k,p,l,l,k,l,l,l,l},
+	    {l,l,k,k,k,l,l,l,p,l,l,k,k,k,k,k},
+	    {l,k,k,l,l,l,l,l,p,k,l,k,l,k,k,k},
+	    {l,l,l,k,l,k,l,l,p,k,k,k,l,l,k,l}}
 end 
 __gfx__
 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000de9a000000000000000
