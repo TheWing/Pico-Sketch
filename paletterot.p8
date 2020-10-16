@@ -10,31 +10,42 @@ yy=0
 f=0
 fr=0
 ff=0
-bg=5
-fg=6
+b=4
+f=9
 
-bw={{bg,bg,fg,fg,fg,fg,bg,fg,bg,bg,bg,fg,bg,bg,bg,bg},
-    {bg,bg,fg,fg,fg,bg,bg,bg,bg,bg,bg,fg,fg,fg,fg,fg},
-    {bg,fg,fg,bg,bg,bg,bg,bg,bg,fg,bg,fg,bg,fg,fg,fg},
-    {bg,bg,bg,fg,bg,fg,bg,bg,bg,fg,fg,fg,bg,bg,fg,bg}}
+bw={{b,b,f,f,f,f,b,f,b,b,b,f,b,b,b,b},
+    {b,b,f,f,f,b,b,b,b,b,b,f,f,f,f,f},
+    {b,f,f,b,b,b,b,b,b,f,b,f,b,f,f,f},
+    {b,b,b,f,b,f,b,b,b,f,f,f,b,b,f,b}}
      
 function _update60()
 	f=f+1
 	if f%4==0 then
 		ff=ff+1
 	end
+	if f%128==0 then
+		rnd_palette()
+	end 
 	palette(1+f%4)
 end
 
 function _draw()
 	if f%4==0 then
 		cls(0)
-		for x=0,3 do
-			for y=0,3 do
-				fr=ff+x+y
-				spr((((fr+1)%4)*4+((fr+1)\4*(64)))%128,x*32,y*32,4,4,(x>1),(y>1))
+		if f%256>=128 then
+			for x=0,3 do
+				for y=0,3 do
+					fr=ff+x+y
+					spr((((fr+1)%4)*4+((fr+1)\4*(64)))%128,x*32,y*32,4,4,(x>1),(y>1))
+				end
 			end
-		end
+		else
+			fr=f%32
+			x=(fr%16)*8
+			y=(fr\16)*32
+			sspr(x,y,32,32,0,0,128,128)
+			//zspr(((ff)%4)*4,4,4,0,0,4)
+		end 
 		print(stat(7),6,0,11)
 		for x=0,15 do
 		 pset(x%4+1,x\4+1,x)
@@ -50,6 +61,18 @@ function palette(n)
 		poke(0x5f10+(i-1),bw[n][i])
 	end
 end
+
+function rnd_palette()
+	local l = rnd(16) //b
+	local k = rnd(16) //f
+	if l==k then 
+		l=(l-1)%16
+	end
+	bw={{l,l,k,k,k,k,l,k,l,l,l,k,l,l,l,l},
+	    {l,l,k,k,k,l,l,l,l,l,l,k,k,k,k,k},
+	    {l,k,k,l,l,l,l,l,l,k,l,k,l,k,k,k},
+	    {l,l,l,k,l,k,l,l,l,k,k,k,l,l,k,l}}
+end 
 __gfx__
 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000de9a000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000ebbbe90000000000000000000000000042bbbbb9a0000000000000
