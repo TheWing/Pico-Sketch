@@ -46,6 +46,10 @@ function _update60()
 		for i=1,spd do 
 			step_ant()
 		end
+		if btnp(0) then sel=sel-1 end
+		if btnp(1) then sel=sel+1 end
+		sel=sel%16
+		pal_buttons()
 		if btn(2) then spd=spd+1 end
 		if btn(3) then spd=spd-1 end
 		spd=max(1,spd)
@@ -71,9 +75,35 @@ function _update60()
 			inst=remove_spaces(il)
 			initiate()
 		end
+		pal_buttons()
 	end
 end
 
+function pal_change(sel,a)
+	local cur,addr
+	addr=0x5f10+sel
+	cur=peek(addr)
+	if cur<128 and a<-2 then return end
+	if cur>127 and a>2 then return end
+	if (cur==15 or cur==143) and a==1 then a=0 end
+	if (cur==0 or cur==128) and a==-1 then a=0 end
+	poke(addr,cur+a)
+end
+
+function pal_buttons()
+	if btnp(2,1) then 
+		pal_change(sel,1)
+	end
+	if btnp(3,1) then 
+		pal_change(sel,-1)
+	end
+	if btnp(1,1) then 
+		pal_change(sel,128)
+	end
+	if btnp(0,1) then 
+		pal_change(sel,-128)
+	end
+end
 
 function _draw()
 	if changing==1 then 
@@ -86,11 +116,10 @@ function _draw()
 		end
 		print("|",16*4,0,6)
 		print("|",16*4,4,6)
-		print("________________",0,2,1)
 		for i=0,15 do
 			print("_",i*4,3,i)
+			rectfill(123-(i%4)*4,(i\4)*4,126-(i%4)*4,(i\4)*4+3,i)
 		end
-		print("________________",0,4,1)
 		print(il,0,0,7)
 		print("-",sel*4,4,7)
 		print("",0,16,6)
@@ -102,6 +131,8 @@ function _draw()
 		print("while running,")
 		print("u/d to change speed")
 		print("speed now: "..spd)
+		print("")
+		print("p2 arrows modify selected color")
 	end
 end 
 
