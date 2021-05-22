@@ -42,16 +42,16 @@ function draw_cube(x,y,coff,s)
 	end
 	
 	for tri in all(cube_tris) do
-		p1={
-		r_cube[tri[1]].x*s+off[1],
-		r_cube[tri[1]].y*s+off[2]}
-		p2={
-		r_cube[tri[2]].x*s+off[1],
-		r_cube[tri[2]].y*s+off[2]}
-		p3={
-		r_cube[tri[3]].x*s+off[1],
-		r_cube[tri[3]].y*s+off[2]}
 		if tri[4]!=alpha then
+			p1={
+			r_cube[tri[1]].x*s+off[1],
+			r_cube[tri[1]].y*s+off[2]}
+			p2={
+			r_cube[tri[2]].x*s+off[1],
+			r_cube[tri[2]].y*s+off[2]}
+			p3={
+			r_cube[tri[3]].x*s+off[1],
+			r_cube[tri[3]].y*s+off[2]}
 			trifill(p1,p2,p3,tri[4])
 		end
 	end
