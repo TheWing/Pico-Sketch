@@ -2,14 +2,108 @@ pico-8 cartridge // http://www.pico-8.com
 version 30
 __lua__
 function _init()
+
+	poke(0x5f40,0b0000)
+	poke(0x5f41,0b0000)
+	poke(0x5f42,0b0000)
+	poke(0x5f43,0b0000)
 	music(0)
 end
 function _update60()
-	
+	update_sound()
 end
 function _draw()
 	cls(0)
+	music_stats()
 end
+
+-->8
+-- sound
+
+ch4={}
+note=0
+inst=0
+sefx=0
+volu=0
+hit={0,0,0,0,0}
+hitf={0,0,0,0,0}
+ti={0,0,0,0,0,0}
+pattern=0
+mus_bd=0
+mus_bep=0
+rates={}
+reverb={}
+distorsion={}
+filter={}
+
+function update_sound()
+	pattern=stat(24)+1
+	update_music_stats()
+end
+
+function update_music_stats()
+	ch4=get_note(3)
+	note=ch4[1]
+	inst=ch4[2]
+	sefx=ch4[3]
+	volu=ch4[4]
+end
+
+function get_note(ch)
+	local sf = stat(16+ch)
+	local tm = stat(20+ch)
+	local addr = %(0x3200 + 68*sf + 2*tm)
+	--      bitmap    sfx
+	--       for         vol
+	--      notes           inr
+	--                         pitch   
+	local pitch = (0b0000000000111111&addr)
+	local instr = (0b0000000111000000&addr)>>>6
+	local vol   = (0b0000111000000000&addr)>>>9
+	local fx    = (0b0111000000000000&addr)>>>12
+	return { pitch, instr, vol, fx }
+end
+
+function stats(i,k,x,y,text)
+	print("",x,y,7)
+	print(text)
+	color(8)
+	for li=i,k do
+	 print(stat(li))
+	end
+end
+function music_stats()
+	stats(16,19,0,0,"ptrn")
+	stats(20,23,4*5,0,"note")
+	stats(24,24,0,6*5,"current")
+	stats(25,25,4*8,6*5,"played")
+	stats(26,26,0,6*7,"ticks")
+	
+	for i=1,4 do
+		rates[i]=(@0x5f40&(0b0001<<(i-1))!=0)
+		reverb[i]=(@0x5f41&(0b0001<<(i-1))!=0)
+		distorsion[i]=(@0x5f42&(0b0001<<(i-1))!=0)
+		filter[i]=(@0x5f43&(0b0001<<(i-1))!=0)
+	end
+	print("half speed",4*15,0,7)
+	print("",4*15,6,8)
+	foreach(rates,print)
+	color(7)
+	print("reverb")
+	color(8)
+	foreach(reverb,print)
+	color(7)
+	print("distorsion")
+	color(8)
+	foreach(distorsion,print)
+	color(7)
+	print("lowpass filter")
+	color(8)
+	foreach(filter,print)
+	
+	print("",0,6*9,9)
+	foreach(get_note(stat(16),stat(20)),print)
+end 
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
