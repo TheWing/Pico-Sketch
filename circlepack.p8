@@ -2,6 +2,7 @@ pico-8 cartridge // http://www.pico-8.com
 version 35
 __lua__
 f=0
+t=0
 
 function _init()
 	
@@ -9,16 +10,19 @@ end
 
 function _update60()
 	f=f+1
-	if f%4==0 then 
-		new_circ(rnd()*128,rnd()*128,0,rnd()*8+8)
+	t=f
+	if f%5==0 then 
+		new_circ(rnd()*128,rnd()*128,0,1+rnd()*15)
 	end
 	update_ids()
 	foreach(sph,update_circ)
 end
 
 function _draw()
-	cls()
+	--cls()
+	efu_smear(0.5)
 	foreach(sph,draw_circ)
+	--print(#sph,7)
 end
 
 function update_ids()
@@ -34,6 +38,7 @@ sph={{i=0,
       y=0,
       d=0,
       c=0,
+      b=0,
       dead=1,}}
       
 s={dead=1}
@@ -42,7 +47,7 @@ function draw_circ(s)
 	if s.dead!=1 then 
 		if s.d>0 then 
 			circfill(s.x,s.y,s.d,s.c)
-			circ(s.x,s.y,s.d,s.c\2)
+			circfill(s.x,s.y,s.d-(s.d\8+1),s.b*7)
 		end
 	end
 end
@@ -53,17 +58,35 @@ function update_circ(s)
 		if s.d>128 then
 			s.dead=1
 		end
-		grow=1
+		if s.x<0-s.d then 
+			s.dead=1
+		end
+		if s.y<0-s.d then 
+			s.dead=1
+		end
+		if s.x>128+s.d then 
+			s.dead=1
+		end
+		if s.y>128+s.d then 
+			s.dead=1
+		end
+		grow=0.5
 		for c in all(sph) do
 			if c.i!=s.i then
 				local d=distance(c.x,c.y,s.x,s.y)
-				if d<=(s.d+c.d)+1 then
-					grow=0
-					s.dead=2
+				if d.d<=(s.d+c.d)+1 then
+					grow=grow-0.25
+					s.x=s.x+d.x/10
+					s.y=s.y+d.y/10
+				end
+				if d.d<s.d then
+					c.dead=1
 				end
 			end
 		end
-		s.d=s.d+grow
+		if s.x>0 and s.x<128 and s.y>0 and s.y<128 then
+			s.d=s.d+grow
+		end
 	elseif s.dead==2 then
 		
 	else 
@@ -77,6 +100,7 @@ function new_circ(x,y,d,c)
 	         y=y,
 	         d=d,
 	         c=c,
+	         b=(#sph+1)%2,
 	         dead=0},
 	         #sph+1)
 end
@@ -92,7 +116,40 @@ function distance(x1,y1,x2,y2)
 	local sqx=abs(min(64,dx)*min(64,dx))
 	local sqy=abs(min(64,dy)*min(64,dy))
 	local res=min(16000,sqx)+min(16000,sqy)
-	return sqrt(res)*sc
+	return {d=sqrt(res)*sc,x=dx,y=dy}
+end
+-->8
+-- gfx stuff
+
+
+--memcopy that doesn't overflow
+function smcpy(to_mem,fr_mem,len)
+	if to_mem<0x6000 then to_mem=0x6000 end
+	if to_mem>0x7ffe then
+		to_mem=0x7ffe
+		len=1
+	end
+	if to_mem+len>0x7fff then len=0x7fff-to_mem end
+	--if fr_mem<0x6000 then fr_mem=0x6000 end
+	if fr_mem>0x7ffe then
+		fr_mem=0x7ffe
+		len=1
+	end
+	if fr_mem+len>0x7fff then len=0x7fff-fr_mem end
+	
+	memcpy(to_mem,fr_mem,len)
+end
+
+function efu_smear(str)
+	local i
+	local r
+	for i=1,127 do
+		memcpy(0x6000+i*63-str*(rnd(2+((t\4)%6)*0.25)),0x6000+i*63-str*(rnd(2+((t\4)%8)*0.25)),rnd(128)) 
+--		if rnd(90)\1>88 then
+		--	r=0x7//rnd(0xf)\1
+--			memset(0x6000+i*64,r|(r<<4),64)
+	--	end
+	end 
 end
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
